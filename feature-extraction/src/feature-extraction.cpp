@@ -26,7 +26,7 @@
 #include <vector>
 #include <chrono>
 #include <limits>
-#include <filesystem>
+#include <sys/stat.h>
 
 #define MORPHEUS_START_SCOPE() {  // Open Morpheus Scope
 #define MORPHEUS_END_SCOPE() }    // Close Morpheus Scope
@@ -140,18 +140,16 @@ int main(int argc, char* argv[]) {
   features[7] = Morpheus::std<backend_t>(nnz_per_row, nnz_per_row.size(),
                                          Morpheus::average_nnnz(A));
   features[8] = Morpheus::count_nnz<backend_t>(nnz_per_diag);
-  features[9] = Morpheus::count_nnz<backend_t>(nnz_per_diag, A.nrows() / 2);
+  features[9] = Morpheus::count_nnz<backend_t>(nnz_per_diag, A.nrows() / 4);
 
   std::stringstream ss;
   generate_line(ss, feature_names, features_size);
   generate_line(ss, features, features_size);
 
-  if (!std::filesystem::exists(outdir)) {
-    if (!std::filesystem::create_directory(outdir)) {
-      std::cout << "Output Directory (" << outdir << ") was NOT created!"
-                << std::endl;
-      exit(1);
-    }
+  if (mkdir(outdir.c_str(), 0777) == -1) {
+    std::cout << "Output Directory (" << outdir << ") was NOT created!"
+              << std::endl;
+    exit(1);
   }
 
   std::ofstream outFile;
