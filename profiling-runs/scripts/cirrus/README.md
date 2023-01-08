@@ -1,4 +1,4 @@
-# Building Feature Extraction Routine
+# Building Profiling Runs Routine
 
 ```sh
 $ BACKEND=[serial | openmp | cuda]
@@ -38,38 +38,42 @@ BUDGET=d403-cs
 ./build.sh $BACKEND $MORPHEUS_INSTALL_DIR $KOKKOS_INSTALL_DIR $BUDGET
 ```
 
-# Run Feature Extraction Routine
+# Run Profiling Runs Routine
 
 ```sh
 $ BACKEND=[serial | openmp | cuda]
-$ DATASET=[small_set | square_set]
+$ DATASET=/path/to/dataset
+$ REPETITIONS=500
 $ BUDGET=[budget code]
-$ ./run.sh $BACKEND $DATASET $BUDGET
+$ ./run.sh $BACKEND $DATASET $REPETITIONS $BUDGET
 ```
 
 ### Example: Cirrus Serial
 ```sh
 WORK_DIR=/work/d403/d403/cstyl16
 BACKEND=serial
-DATASET=small_set
+DATASET=$WORK_DIR/sparse.tree/data/small_set
+REPETITIONS=500
 BUDGET=d403-cs
-./run.sh $BACKEND $DATASET $BUDGET
+./run.sh $BACKEND $DATASET $REPETITIONS $BUDGET
 ```
 
 ### Example: Cirrus OpenMP
 ```sh
 WORK_DIR=/work/d403/d403/cstyl16
 BACKEND=openmp
-DATASET=small_set
+DATASET=$WORK_DIR/sparse.tree/data/small_set
+REPETITIONS=500
 BUDGET=d403-cs
-./run.sh $BACKEND $DATASET $BUDGET
+./run.sh $BACKEND $DATASET $REPETITIONS $BUDGET
 ```
 
 ### Example: Cirrus GPU
 ```sh
 WORK_DIR=/work/d403/d403/cstyl16
 BACKEND=cuda
-DATASET=small_set
+DATASET=$WORK_DIR/sparse.tree/data/small_set
+REPETITIONS=500
 BUDGET=d403-cs
-./run.sh $BACKEND $DATASET $BUDGET
+./run.sh $BACKEND $DATASET $REPETITIONS $BUDGET
 ```

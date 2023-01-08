@@ -146,10 +146,13 @@ int main(int argc, char* argv[]) {
   generate_line(ss, feature_names, features_size);
   generate_line(ss, features, features_size);
 
-  if (mkdir(outdir.c_str(), 0777) == -1) {
-    std::cout << "Output Directory (" << outdir << ") was NOT created!"
-              << std::endl;
-    exit(1);
+  struct stat buffer;
+  if (stat(outdir.c_str(), &buffer) != 0) {
+    if (mkdir(outdir.c_str(), 0777) != 0) {
+      std::cout << "Output Directory (" << outdir << ") was NOT created!"
+                << std::endl;
+      exit(1);
+    }
   }
 
   std::ofstream outFile;

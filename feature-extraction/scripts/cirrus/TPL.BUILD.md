@@ -21,7 +21,7 @@ MORPHEUS_INSTALL_DIR=$WORK_DIR/morpheus/installs/gnu-10.2-off-on
 
 ## Kokkos
 ```sh
-mkdir -p $KOKKOS_BUILD_DIR && cd $KOKKOS_BUILD_DIR
+rm -rf $KOKKOS_BUILD_DIR && mkdir -p $KOKKOS_BUILD_DIR && cd $KOKKOS_BUILD_DIR
 cmake $KOKKOS_ROOT_DIR -DCMAKE_CXX_COMPILER=${CXX_COMPILER} \
                        -DCMAKE_INSTALL_PREFIX=${KOKKOS_INSTALL_DIR} \
                        -DCMAKE_BUILD_TYPE=Release \
@@ -32,12 +32,13 @@ cmake $KOKKOS_ROOT_DIR -DCMAKE_CXX_COMPILER=${CXX_COMPILER} \
                        -DKokkos_CXX_STANDARD=17 \
                        -DKokkos_ENABLE_COMPILER_WARNINGS=ON \
                        -DKokkos_ARCH_BDW=ON \
-                       -DKokkos_ENABLE_AGGRESSIVE_VECTORIZATION=ON && make -j && make install
+                       -DKokkos_ENABLE_AGGRESSIVE_VECTORIZATION=ON \
+                       -DKokkos_ENABLE_DEBUG_BOUNDS_CHECK=OFF && make -j && make install
 ```
 
 ## Morpheus
 ``` sh
-mkdir -p $MORPHEUS_BUILD_DIR && cd $MORPHEUS_BUILD_DIR
+rm -rf $MORPHEUS_BUILD_DIR && mkdir -p $MORPHEUS_BUILD_DIR && cd $MORPHEUS_BUILD_DIR
 cmake $MORPHEUS_ROOT_DIR -DCMAKE_CXX_COMPILER=${CXX_COMPILER} \
                          -DCMAKE_INSTALL_PREFIX=${MORPHEUS_INSTALL_DIR} \
                          -DCMAKE_BUILD_TYPE=Release \

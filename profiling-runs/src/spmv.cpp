@@ -26,6 +26,7 @@
 #include <vector>
 #include <chrono>
 #include <limits>
+#include <sys/stat.h>
 
 #define MORPHEUS_START_SCOPE() {  // Open Morpheus Scope
 #define MORPHEUS_END_SCOPE() }    // Close Morpheus Scope
@@ -91,17 +92,25 @@ void tune_spmv(Matrix& A, int reps, Timings_t& timings) {
   }
 }
 
+template <typename T1, typename T2>
+void generate_line(std::stringstream& ss, T1& timings, T2 optimum_format) {
+  for (size_t i = 0; i < timings.size(); i++) {
+    ss << i << "," << timings[i] << "," << optimum_format << std::endl;
+  }
+}
+
 int main(int argc, char* argv[]) {
   Morpheus::initialize(argc, argv, false);
   MORPHEUS_START_SCOPE();
 
-  const int rt_args = 3;
+  const int rt_args = 4;
 
   if (argc != rt_args) {
     std::stringstream rt_error_msg;
     rt_error_msg << "Benchmark requires " << rt_args - 1
                  << " runtime input arguments:\n";
     rt_error_msg << "\tfilename   : Matrix Market file to be used.\n";
+    rt_error_msg << "\toutdir   : Output Directory to write the features in.\n";
     rt_error_msg << "\treps : How many repetitions for each format.\n";
     rt_error_msg << "Received " << argc - 1 << " arguments !\n ";
 
@@ -109,11 +118,12 @@ int main(int argc, char* argv[]) {
     exit(-1);
   }
 
-  std::string filename = argv[1];
-  size_t reps          = atoi(argv[2]);
+  std::string filename = argv[1], outdir = argv[2];
+  size_t reps = atoi(argv[3]);
 
   std::cout << "\nRunning SparseTree SpMV Benchmark with:\n";
   std::cout << "\tFilename    : " << filename << "\n";
+  std::cout << "\tOutDir      : " << outdir << "\n";
   std::cout << "\tRepetitions : " << reps << "\n\n";
 
   Matrix A;
@@ -154,10 +164,24 @@ int main(int argc, char* argv[]) {
       format_id = i;
     }
   }
-  for (size_t i = 0; i < avg_timings.size(); i++) {
-    std::cout << "(" << i << ") | " << avg_timings[i] << std::endl;
+
+  std::stringstream ss;
+  ss << "Format,Timings,OptimumFormat" << std::endl;
+  generate_line(ss, avg_timings, format_id);
+
+  struct stat buffer;
+  if (stat(outdir.c_str(), &buffer) != 0) {
+    if (mkdir(outdir.c_str(), 0777) != 0) {
+      std::cout << "Output Directory (" << outdir << ") was NOT created!"
+                << std::endl;
+      exit(1);
+    }
   }
-  std::cout << "Optimum Format = " << format_id << std::endl;
+
+  std::ofstream outFile;
+  outFile.open(outdir + "/runtime.csv");
+  outFile << ss.str();
+  outFile.close();
 
   MORPHEUS_END_SCOPE();
   Morpheus::finalize();

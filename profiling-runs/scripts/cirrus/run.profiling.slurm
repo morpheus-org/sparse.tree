@@ -4,6 +4,7 @@ RUN_PATH=$1
 DATA_PATH=$2
 EXE=$3
 BACKEND=$4
+REPS=$5
 
 module load gcc/10.2.0
 
@@ -39,12 +40,12 @@ for FILE in $DATA_PATH/*; do
   MATRIX_FILE="$FILE/$MATRIX.mtx"
   OUTDIR="$RUN_PATH/$MATRIX"
 
-  mkdir -p $OUTDIR
+  rm -rf $OUTDIR && mkdir -p $OUTDIR
   
   echo -e "\t$MATRIX"
   srun --hint=nomultithread --exclusive \
      --nodes=1 --ntasks=1 $ncpus $ngpus \
-     $EXE $MATRIX_FILE $OUTDIR $FMT_ID \
+     $EXE $MATRIX_FILE $OUTDIR $REPS \
      --kokkos-threads=$NTHREADS --kokkos-num-devices=$NGPUS
 done
 

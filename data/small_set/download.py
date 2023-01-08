@@ -32,8 +32,8 @@ import os
 
 OUTDIR = os.path.dirname(os.path.abspath(__file__)) + "/" + "matrices"
 MAX_MATICES = 10000
-SET_MATRICES = 100
-MAX_NNZ = 100000
+SET_MATRICES = 400
+MAX_NNZ = 500000
 
 # Set seed to randomize list in the same way
 random.seed(0)

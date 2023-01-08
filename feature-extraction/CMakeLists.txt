@@ -10,4 +10,5 @@ option(SparseTree_ENABLE_SERIAL "Enable Serial Execution Space" OFF)
 option(SparseTree_ENABLE_OPENMP "Enable OpenMP Execution Space" OFF)
 option(SparseTree_ENABLE_CUDA "Enable Cuda Execution Space" OFF)
 option(SparseTree_ENABLE_HIP "Enable HIP Execution Space" OFF)
+
 add_subdirectory(src)
