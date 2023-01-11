@@ -22,6 +22,7 @@
 """
 
 from sklearn import tree
+import numpy as np
 
 
 class DecisionTreeClassifier(tree.DecisionTreeClassifier):
@@ -33,7 +34,7 @@ class DecisionTreeClassifier(tree.DecisionTreeClassifier):
     def __init__(self, **kwargs):
         super(DecisionTreeClassifier, self).__init__(**kwargs)
 
-    def extract(self, filename):
+    def extract(self, filename, feature_names):
         """
         Extracts the tree in a file.
 
@@ -41,19 +42,33 @@ class DecisionTreeClassifier(tree.DecisionTreeClassifier):
         ----------
         filename : str
             A path to the filename to extract the tree in.
+        feature_names : list
+            A list containing the name of each feature.
         """
         tree = self.tree_
         write_array = self.__extract_array
 
+        if isinstance(feature_names, list):
+            features_size = len(feature_names)
+        elif isinstance(feature_names, np.ndarray):
+            features_size = feature_names.shape[0]
+        else:
+            raise TypeError(
+                f"Type of feature_names ({type(feature_names)}) must be either list or numpy.ndarray"
+            )
+
         with open(filename, "w") as f:
             # Write sizes
-            f.write("# Sizes (Nclasses, NodeCount, MaxDepth)\n")
+            f.write("# Sizes (NFeatures, Nclasses, NodeCount, MaxDepth)\n")
+            f.write(str(features_size) + "\t")
             f.write(str(self.n_classes_) + "\t")
             f.write(str(tree.node_count) + "\t")
             f.write(str(tree.max_depth) + "\n")
 
             # Write Classes
             write_array(f, self.classes_, self.n_classes_, comment="Classes")
+            # Write Feature Names
+            write_array(f, feature_names, features_size, comment="Feature Names")
 
             # Write tree data
             write_array(f, tree.children_left, tree.node_count, comment="Left")
