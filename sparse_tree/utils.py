@@ -1,5 +1,5 @@
 """
- __init__.py
+ utils.py
  
  EPCC, The University of Edinburgh
  
@@ -21,10 +21,9 @@
  limitations under the License.
 """
 
-"Sparse Matrix Format Selection using Decision Trees"
 
-__version__ = "0.1.0"
-
-from .dataset import *
-from .classifier import *
-from .utils import *
+def extract_array(writer, array, size, comment=None):
+    if comment:
+        writer.write("# " + comment + "\n")
+    for i, entry in enumerate(array):
+        writer.write(str(entry) + ("\t" if i < size - 1 else "\n"))
