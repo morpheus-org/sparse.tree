@@ -46,9 +46,9 @@ using exec_space_t = typename morpheus_space_t::OpenMP::execution_space;
 using mem_space_t  = typename morpheus_space_t::OpenMP::memory_space;
 using backend_t    = typename morpheus_space_t::OpenMP::backend;
 #elif defined(SparseTree_ENABLE_CUDA)
-using exec_space_t         = typename morpheus_space_t::Cuda::execution_space;
-using mem_space_t          = typename morpheus_space_t::Cuda::memory_space;
-using backend_t            = typename morpheus_space_t::Cuda::backend;
+using exec_space_t = typename morpheus_space_t::Cuda::execution_space;
+using mem_space_t  = typename morpheus_space_t::Cuda::memory_space;
+using backend_t    = typename morpheus_space_t::Cuda::backend;
 #elif defined(SparseTree_ENABLE_HIP)
 using exec_space_t = typename morpheus_space_t::HIP::execution_space;
 using mem_space_t  = typename morpheus_space_t::HIP::memory_space;
@@ -72,8 +72,11 @@ void tune_spmv(Matrix& A, int reps, Timings_t& timings) {
   Vector x(A.ncols(), scalar_t(2)), y(A.nrows(), scalar_t(0));
 
   for (auto fmt_idx = 0; fmt_idx < Morpheus::NFORMATS; fmt_idx++) {
+    std::cout << "CONVERSION: " << Ah.active_index() << "->" << fmt_idx
+              << std::endl;
     Morpheus::conversion_error_e status =
         Morpheus::convert<Morpheus::Serial>(Ah, fmt_idx);
+    std::cout << "CONVERSION COMPLETED!" << std::endl;
 
     if (status == Morpheus::CONV_SUCCESS) {
       A.activate(Ah.active_index());
@@ -135,6 +138,7 @@ int main(int argc, char* argv[]) {
     std::cerr << "Exception Raised:: " << e.what() << std::endl;
     exit(0);
   }
+  std::cout << "IO::Loading Completed!" << std::endl;
 
   // Setup local matrix on Device
   A.activate(Ah.active_index());
