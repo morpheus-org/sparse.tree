@@ -1,0 +1,32 @@
+#!/bin/bash --login
+
+XCI_SCRIPT_PATH=$SCRIPTPATH
+PROFILING_ROOT_PATH=$ROOT_DIR
+BUILD_PATH=$BUILD_PATH
+BACKEND=$BACKEND
+MORPHEUS_PATH=$MORPHEUS_PATH
+KOKKOS_PATH=$KOKKOS_PATH
+
+PROFILING_INSTALL_DIR=$XCI_SCRIPT_PATH/installs/$BACKEND
+
+module use -a /lustre/projects/bristol/modules-arm-phase2/modulefiles
+module load cmake/3.23.2
+module load craype-arm-thunderx2
+module load gcc/10.3.0
+
+BACKEND_SERIAL="ON"
+BACKEND_OPENMP="OFF"
+
+CXX_COMPILER=$(which g++)
+if [ "openmp" == "$BACKEND" ]; then
+  BACKEND_OPENMP="ON"
+fi
+
+mkdir -p $BUILD_PATH && cd $BUILD_PATH
+cmake $PROFILING_ROOT_PATH -DCMAKE_CXX_COMPILER=${CXX_COMPILER} \
+                           -DCMAKE_BUILD_TYPE=Release \
+                           -DCMAKE_INSTALL_PREFIX=${PROFILING_INSTALL_DIR} \
+                           -DCMAKE_CXX_EXTENSIONS=Off \
+                           -DMorpheus_ROOT=${MORPHEUS_PATH} \
+                           -DSparseTree_ENABLE_SERIAL=${BACKEND_SERIAL} \
+                           -DSparseTree_ENABLE_OPENMP=${BACKEND_OPENMP} && make -j

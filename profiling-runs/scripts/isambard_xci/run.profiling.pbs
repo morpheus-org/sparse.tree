@@ -1,0 +1,34 @@
+#!/bin/bash --login
+
+RUN_PATH=$RUNPATH
+DATA_PATH=$DATADIR
+EXE=$EXE
+BACKEND=$BACKEND
+REPS=$REPS
+
+module load gcc/10.3.0
+
+export OMP_PROC_BIND=close
+export OMP_PLACES=cores
+if [ "serial" == "$BACKEND" ]; then
+  export OMP_NUM_THREADS=1 
+  NTHREADS=1
+  NGPUS=0
+elif [ "openmp" == "$BACKEND" ]; then
+  export OMP_NUM_THREADS=32 
+  NTHREADS=32
+  NGPUS=0
+fi
+
+echo -e "Generating features for $BACKEND backend:"
+for FILE in $DATA_PATH/*; do 
+  MATRIX=$(basename $FILE)
+  MATRIX_FILE="$FILE/$MATRIX.mtx"
+  OUTDIR="$RUN_PATH/matrices/$MATRIX"
+
+  mkdir -p $OUTDIR
+  
+  echo -e "\t$MATRIX"
+  $EXE $MATRIX_FILE $OUTDIR $REPS \
+     --kokkos-threads=$NTHREADS --kokkos-num-devices=$NGPUS
+done
