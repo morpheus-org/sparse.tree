@@ -6,20 +6,13 @@ EXE=$EXE
 BACKEND=$BACKEND
 REPS=$REPS
 
-module use -a /lustre/projects/bristol/modules-a64fx/modulefiles
-module load gcc/10.3.0
+module load amd
 
 export OMP_PROC_BIND=close
 export OMP_PLACES=cores
-if [ "serial" == "$BACKEND" ]; then
-  export OMP_NUM_THREADS=1 
-  NTHREADS=1
-  NGPUS=0
-elif [ "openmp" == "$BACKEND" ]; then
-  export OMP_NUM_THREADS=48 
-  NTHREADS=48
-  NGPUS=0
-fi
+export OMP_NUM_THREADS=1 
+NTHREADS=1
+NGPUS=1
 
 echo -e "Generating features for $BACKEND backend:"
 for FILE in $DATA_PATH/*; do 
@@ -33,4 +26,5 @@ for FILE in $DATA_PATH/*; do
   $EXE $MATRIX_FILE $OUTDIR $REPS \
      --kokkos-threads=$NTHREADS --kokkos-num-devices=$NGPUS
 done
+
 

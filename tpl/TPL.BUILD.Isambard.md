@@ -1,15 +1,16 @@
 # P3 - Instinct
 ## GPU
-1. Start an Interactive Job:
+1. To start an Interactive Job:
 ```sh
-qsub -I -q instinctq -l select=1:ncpus=32:ngpus=4 -l place=excl
+qsub -I -q instinctq -l select=1:ncpus=32 -l place=excl
 ```
-2. Load Environment:
+*WARNING:* that compilation for the AMD GPUS can only be done on the login nodes of P3 system.
+
+2. Load Environment (LOGIN NODE):
 ```sh
 module use -a /lustre/projects/bristol/modules/modulefiles
+module load PrgEnv-amd
 module load cmake
-module load craype-accel-amd-gfx908
-module load amd/4.5.1
 WORK_DIR=/lustre/home/ri-cstylianou
 CXX_COMPILER=$(which hipcc)
 KOKKOS_ROOT_DIR=$WORK_DIR/kokkos
