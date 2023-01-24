@@ -20,14 +20,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-A64FX_SCRIPT_PATH="$(
+AMPERE_SCRIPT_PATH="$(
   cd -- "$(dirname "$0")" >/dev/null 2>&1
   pwd -P
 )"
 
 if [ "$#" -lt "3" ]; then
   echo -e "Script requires 3 runtime arguments to run."
-  echo -e "\t\$1 : Backend [serial | openmp ]"
+  echo -e "\t\$1 : Backend [cuda]"
   echo -e "\t\$2 : Dataset [small_set | square_set]"
   echo -e "\t\$3 : Number of iterations to run SpMV."
   exit 0
@@ -36,12 +36,14 @@ fi
 backend=$1
 DATA_SET=$2
 reps=$3
-queue="a64fx"
+queue="ampereq"
 
-if [ "serial" != "$backend" ] && [ "openmp" != "$backend" ]; then
-  echo "Invalid backend ($backend)!"
-  echo -e "\tAvailable backends: [serial | openmp ]"
-  exit 1
+if [ "cuda" == "$backend" ]; then
+  queue="ampereq"
+else
+ echo "Invalid backend ($backend)!"
+ echo -e "\tAvailable backends: [cuda]"
+ exit 1
 fi
 
 if [ "small_set" != "$DATA_SET" ] && [ "square_set" != "$DATA_SET" ]; then
@@ -54,12 +56,12 @@ elif [ "square_set" == "$DATA_SET" ]; then
   MAX_BOUND=2200
 fi
 
-DATA_PATH=$A64FX_SCRIPT_PATH/../../../data/$DATA_SET/matrices
-RUN_PATH=$A64FX_SCRIPT_PATH/run/$DATA_SET/$backend
-EXE=$A64FX_SCRIPT_PATH/build/$backend/src/SparseTree_SpMV
+DATA_PATH=$AMPERE_SCRIPT_PATH/../../../data/$DATA_SET/matrices
+RUN_PATH=$AMPERE_SCRIPT_PATH/run/$DATA_SET/$backend
+EXE=$AMPERE_SCRIPT_PATH/build/$backend/src/SparseTree_SpMV
 
 echo -e "Building Feature Extraction routine:"
-echo -e "\tScript Path : $A64FX_SCRIPT_PATH"
+echo -e "\tScript Path : $AMPERE_SCRIPT_PATH"
 echo -e "\tRun Path    : $RUN_PATH"
 echo -e "\tData Path   : $DATA_PATH"
 echo -e "\tExecutable  : $EXE"
@@ -75,12 +77,12 @@ UPPER_BOUND=$(( $LOW_BOUND + $INCREMENT ))
 while [ $LOW_BOUND -lt $MAX_BOUND ]; do
   DATADIR=$DATA_PATH/$LOW_BOUND\_$UPPER_BOUND
 
-  qsub -q $queue -l select=1:ncpus=48 -l place=excl -l walltime=48:00:00  \
+  qsub -q $queue -l select=1:mem=128gb:ncpus=32:ngpus=1 -l place=excl -l walltime=24:00:00 \
      -o $RUN_PATH/$queue-report-$LOW_BOUND\_$UPPER_BOUND.out \
      -e $RUN_PATH/$queue-report-$LOW_BOUND\_$UPPER_BOUND.err \
      -N "profiling-$queue-run" \
      -v RUNPATH=$RUN_PATH,DATADIR=$DATADIR,EXE=$EXE,BACKEND=$backend,REPS=$reps \
-     $A64FX_SCRIPT_PATH/run.profiling.pbs
+     $AMPERE_SCRIPT_PATH/run.profiling.pbs
 
   LOW_BOUND=$(( $LOW_BOUND + $INCREMENT ))
   UPPER_BOUND=$(( $UPPER_BOUND + $INCREMENT ))
