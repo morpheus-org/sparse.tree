@@ -22,6 +22,7 @@
 """
 
 import pandas
+import numpy as np
 from sklearn.model_selection import train_test_split
 
 
@@ -54,11 +55,11 @@ class MatrixDataset:
         self.feature_names = [
             feature for feature in df.columns if feature.lower() != "matrix"
         ]
-        df = df.merge(pandas.read_csv(targets_filename))
+        df = df.merge(pandas.read_csv(targets_filename)).dropna()
         df = df[df["Format"] == df["OptimumFormat"]]
 
         self.data = df[self.feature_names].to_numpy()
-        self.target = df["OptimumFormat"].to_numpy()
+        self.target = df["OptimumFormat"].to_numpy(dtype=int)
         self.matrices = df["matrix"].to_numpy()
 
     def split(
@@ -66,6 +67,7 @@ class MatrixDataset:
         data,
         targets,
         matrices,
+        per_class=False,
         test_size=None,
         val_size=None,
         train_size=None,
@@ -122,14 +124,56 @@ class MatrixDataset:
                 f"Total size ({total_size}) of each split must add up to the total size of dataset entries ({major_size[0]}) or 1.0"
             )
 
-        X, Xt, Y, Yt, Z, Zt = train_test_split(
-            data,
-            targets,
-            matrices,
-            test_size=test_size,
-            train_size=val_size + train_size,
-            **kwargs,
-        )
+        if per_class:
+            X, Xt, Y, Yt, Z, Zt = [], [], [], [], [], []
+            for class_id in np.unique(targets):
+                sidx = targets == class_id
+
+                _size = test_size
+                if isinstance(test_size, int):
+                    _size = test_size / total_size
+
+                if targets[sidx].shape[0] * _size <= 1:
+                    sX = data[sidx]
+                    sY = targets[sidx]
+                    sZ = matrices[sidx]
+                    for i in range(data[sidx].shape[0]):
+                        X.append(sX[i].tolist())
+                        Y.append(sY[i])
+                        Z.append(sZ[i])
+                    continue
+
+                sX, sXt, sY, sYt, sZ, sZt = train_test_split(
+                    data[sidx],
+                    targets[sidx],
+                    matrices[sidx],
+                    test_size=test_size,
+                    train_size=val_size + train_size,
+                    **kwargs,
+                )
+                for i in range(sX.shape[0]):
+                    X.append(sX[i].tolist())
+                    Y.append(sY[i])
+                    Z.append(sZ[i])
+                for i in range(sXt.shape[0]):
+                    Xt.append(sXt[i].tolist())
+                    Yt.append(sYt[i])
+                    Zt.append(sZt[i])
+            X = np.array(X)
+            Y = np.array(Y)
+            Z = np.array(Z)
+            Xt = np.array(Xt)
+            Yt = np.array(Yt)
+            Zt = np.array(Zt)
+        else:
+            X, Xt, Y, Yt, Z, Zt = train_test_split(
+                data,
+                targets,
+                matrices,
+                test_size=test_size,
+                train_size=val_size + train_size,
+                **kwargs,
+            )
 
         split = {
             "train": {"data": X, "target": Y, "matrices": Z},
@@ -139,14 +183,54 @@ class MatrixDataset:
 
         if val_size != 0.0:
             train_val_size = val_size + train_size
-            Xtr, Xv, Ytr, Yv, Ztr, Zv = train_test_split(
-                X,
-                Y,
-                Z,
-                test_size=val_size / train_val_size if val_size != 0.0 else None,
-                train_size=train_size / train_val_size,
-                **kwargs,
-            )
+            if per_class:
+                Xtr, Xv, Ytr, Yv, Ztr, Zv = [], [], [], [], [], []
+                for class_id in np.unique(Y):
+                    sidx = Y == class_id
+
+                    _size = val_size
+                    if isinstance(val_size, int):
+                        _size = val_size / total_size
+
+                    if Y[sidx].shape[0] * _size <= 1:
+                        sX = X[sidx]
+                        sY = Y[sidx]
+                        sZ = Z[sidx]
+                        for i in range(X[sidx].shape[0]):
+                            Xtr.append(sX[i].tolist())
+                            Ytr.append(sY[i])
+                            Ztr.append(sZ[i])
+                        continue
+
+                    sXtr, sXv, sYtr, sYv, sZtr, sZv = train_test_split(
+                        X[sidx],
+                        Y[sidx],
+                        Z[sidx],
+                        train_size=train_size / train_val_size,
+                        **kwargs,
+                    )
+                    for i in range(sXtr.shape[0]):
+                        Xtr.append(sXtr[i].tolist())
+                        Ytr.append(sYtr[i])
+                        Ztr.append(sZtr[i])
+                    for i in range(sXv.shape[0]):
+                        Xv.append(sXv[i].tolist())
+                        Yv.append(sYv[i])
+                        Zv.append(sZv[i])
+                Xtr = np.array(Xtr)
+                Ytr = np.array(Ytr)
+                Ztr = np.array(Ztr)
+                Xv = np.array(Xv)
+                Yv = np.array(Yv)
+                Zv = np.array(Zv)
+            else:
+                Xtr, Xv, Ytr, Yv, Ztr, Zv = train_test_split(
+                    X,
+                    Y,
+                    Z,
+                    train_size=train_size / train_val_size,
+                    **kwargs,
+                )
 
             split["train"] = {"data": Xtr, "target": Ytr, "matrices": Ztr}
             split["val"] = {"data": Xv, "target": Yv, "matrices": Zv}
