@@ -1,5 +1,5 @@
 """
- baseline.py
+ balanced_data_tuning.py
  
  EPCC, The University of Edinburgh
  
@@ -25,8 +25,6 @@ from sparse_tree.dataset import MatrixDataset
 from sparse_tree.classifier import DecisionTreeClassifier
 import argparse
 import os
-import numpy as np
-import pandas as pd
 
 
 parser = argparse.ArgumentParser()
@@ -49,7 +47,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 script_path = os.path.realpath(os.path.dirname(__file__))
-experiment = "baseline"
+experiment = "balanced_data_tuning"
 baseline_path = os.path.join(script_path, experiment)
 rt_base = os.path.basename(args.runtimes)
 
@@ -74,43 +72,7 @@ split = matrices.split(
     per_class=True,
 )
 
-total_matrices = sum(
-    split[sset]["target"].shape[0] for sset in ["train", "val", "test"]
-)
-# Dataset split stats
-fmat_stats = os.path.join(experiment_path, "matrix_stats.csv")
-print(f"Writing Matrix Stats: ", fmat_stats)
-with open(fmat_stats, "w") as f:
-    header = "system,backend,dataset,set,class_id,class_matrices,total_set_matrices,set_percentage,total_dataset_matrices,dataset_percentage\n"
-    f.write(header)
-    for sset in ["train", "val", "test"]:
-        total_set_matrices = split[sset]["target"].shape[0]
-        for class_id in range(nclasses):
-            class_matrices = np.count_nonzero(split[sset]["target"] == class_id)
-            dataset_percentage = class_matrices / total_matrices
-            set_percentage = class_matrices / total_set_matrices
-            entry = f"{system},{backend},{dataset},{sset},{class_id},{class_matrices},{total_set_matrices},{set_percentage*100:.2f},{total_matrices},{dataset_percentage*100:.2f}\n"
-            f.write(entry)
-
-# Save Test Set
-ftest_set = os.path.join(experiment_path, "test_set.csv")
-ftest_targets = os.path.join(experiment_path, "test_targets.csv")
-pd.concat(
-    [
-        pd.DataFrame(split["test"]["matrices"], columns=["Matrix"]),
-        pd.DataFrame(split["test"]["data"], columns=matrices.feature_names),
-    ],
-    axis=1,
-).to_csv(ftest_set, index=False)
-pd.concat(
-    [
-        pd.DataFrame(split["test"]["matrices"], columns=["Matrix"]),
-        pd.DataFrame(split["test"]["target"], columns=["Class"]),
-    ],
-    axis=1,
-).to_csv(ftest_targets, index=False)
-
-clf = DecisionTreeClassifier(random_state=10)
+clf = DecisionTreeClassifier(random_state=10, class_weight="balanced")
 clf = clf.fit(split["train"]["data"], split["train"]["target"])
 clf.extract(
     os.path.join(experiment_path, "tree.txt"),
@@ -140,6 +102,7 @@ with open(facc, "w") as f:
         "experiment,system,backend,dataset,set,total_set_matrices,misses,accuracy\n"
     )
     f.write(header)
+    total_set_matrices = split["val"]["target"].shape[0]
     accuracy = (1 - misses / nval_samples) * 100
     f.write(
         f"{experiment},{system},{backend},{dataset},val,{total_set_matrices},{misses},{accuracy:.4f}\n"
