@@ -1,0 +1,13 @@
+system,backend,dataset,set,class_id,class_matrices,total_set_matrices,set_percentage,total_dataset_matrices,dataset_percentage
+cirrus,serial,square_set,train,0,124,1684,7.36,2106,5.89
+cirrus,serial,square_set,train,1,1507,1684,89.49,2106,71.56
+cirrus,serial,square_set,train,2,1,1684,0.06,2106,0.05
+cirrus,serial,square_set,train,3,0,1684,0.00,2106,0.00
+cirrus,serial,square_set,train,4,0,1684,0.00,2106,0.00
+cirrus,serial,square_set,train,5,52,1684,3.09,2106,2.47
+cirrus,serial,square_set,test,0,32,422,7.58,2106,1.52
+cirrus,serial,square_set,test,1,377,422,89.34,2106,17.90
+cirrus,serial,square_set,test,2,0,422,0.00,2106,0.00
+cirrus,serial,square_set,test,3,0,422,0.00,2106,0.00
+cirrus,serial,square_set,test,4,0,422,0.00,2106,0.00
+cirrus,serial,square_set,test,5,13,422,3.08,2106,0.62

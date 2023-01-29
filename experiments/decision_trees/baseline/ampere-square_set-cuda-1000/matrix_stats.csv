@@ -1,0 +1,13 @@
+system,backend,dataset,set,class_id,class_matrices,total_set_matrices,set_percentage,total_dataset_matrices,dataset_percentage
+ampere,cuda,square_set,train,0,24,1678,1.43,2102,1.14
+ampere,cuda,square_set,train,1,821,1678,48.93,2102,39.06
+ampere,cuda,square_set,train,2,372,1678,22.17,2102,17.70
+ampere,cuda,square_set,train,3,441,1678,26.28,2102,20.98
+ampere,cuda,square_set,train,4,12,1678,0.72,2102,0.57
+ampere,cuda,square_set,train,5,8,1678,0.48,2102,0.38
+ampere,cuda,square_set,test,0,6,424,1.42,2102,0.29
+ampere,cuda,square_set,test,1,206,424,48.58,2102,9.80
+ampere,cuda,square_set,test,2,94,424,22.17,2102,4.47
+ampere,cuda,square_set,test,3,111,424,26.18,2102,5.28
+ampere,cuda,square_set,test,4,4,424,0.94,2102,0.19
+ampere,cuda,square_set,test,5,3,424,0.71,2102,0.14

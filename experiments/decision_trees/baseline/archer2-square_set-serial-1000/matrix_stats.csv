@@ -1,0 +1,13 @@
+system,backend,dataset,set,class_id,class_matrices,total_set_matrices,set_percentage,total_dataset_matrices,dataset_percentage
+archer2,serial,square_set,train,0,105,1637,6.41,2048,5.13
+archer2,serial,square_set,train,1,1477,1637,90.23,2048,72.12
+archer2,serial,square_set,train,2,0,1637,0.00,2048,0.00
+archer2,serial,square_set,train,3,0,1637,0.00,2048,0.00
+archer2,serial,square_set,train,4,0,1637,0.00,2048,0.00
+archer2,serial,square_set,train,5,55,1637,3.36,2048,2.69
+archer2,serial,square_set,test,0,27,411,6.57,2048,1.32
+archer2,serial,square_set,test,1,370,411,90.02,2048,18.07
+archer2,serial,square_set,test,2,0,411,0.00,2048,0.00
+archer2,serial,square_set,test,3,0,411,0.00,2048,0.00
+archer2,serial,square_set,test,4,0,411,0.00,2048,0.00
+archer2,serial,square_set,test,5,14,411,3.41,2048,0.68

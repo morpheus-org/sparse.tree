@@ -1,0 +1,3 @@
+experiment,system,backend,dataset,model,max_depth,min_samples_leaf,min_samples_split,max_features,splitter,criterion,class_weight,accuracy,precision,recall,fscore
+tune,archer2,openmp,square_set,baseline,None,1,2,None,best,gini,None,0.921986,0.920212,0.921986,0.920908
+tune,archer2,openmp,square_set,tuned,13,1,5,8,best,entropy,balanced,0.919622,0.929126,0.919622,0.923658

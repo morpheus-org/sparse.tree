@@ -67,23 +67,20 @@ split = matrices.split(
     matrices.data,
     matrices.target,
     matrices.matrices,
-    train_size=0.7,
-    test_size=0.1,
-    val_size=0.2,
+    train_size=0.8,
+    test_size=0.2,
     random_state=100,
     per_class=True,
 )
 
-total_matrices = sum(
-    split[sset]["target"].shape[0] for sset in ["train", "val", "test"]
-)
+total_matrices = sum(split[sset]["target"].shape[0] for sset in ["train", "test"])
 # Dataset split stats
 fmat_stats = os.path.join(experiment_path, "matrix_stats.csv")
 print(f"Writing Matrix Stats: ", fmat_stats)
 with open(fmat_stats, "w") as f:
     header = "system,backend,dataset,set,class_id,class_matrices,total_set_matrices,set_percentage,total_dataset_matrices,dataset_percentage\n"
     f.write(header)
-    for sset in ["train", "val", "test"]:
+    for sset in ["train", "test"]:
         total_set_matrices = split[sset]["target"].shape[0]
         for class_id in range(nclasses):
             class_matrices = np.count_nonzero(split[sset]["target"] == class_id)
@@ -116,31 +113,3 @@ clf.extract(
     os.path.join(experiment_path, "tree.txt"),
     matrices.feature_names,
 )
-
-misses_str = "MissCtr,Matrix,Experimental,Actual\n"
-misses = 0
-nval_samples = split["val"]["data"].shape[0]
-for i in range(nval_samples):
-    experimental = clf.evaluate(split["val"]["data"][i])
-    actual = split["val"]["target"][i]
-    if experimental != actual:
-        matrix = split["val"]["matrices"][i]
-        misses_str += f"{misses},{matrix},{experimental},{actual}\n"
-        misses += 1
-
-fmisses = os.path.join(experiment_path, "misses.csv")
-print(f"Writing Misses: ", fmisses)
-with open(fmisses, "w") as f:
-    f.write(misses_str)
-
-facc = os.path.join(experiment_path, "accuracy.csv")
-print(f"Writing Accuracy: ", facc)
-with open(facc, "w") as f:
-    header = (
-        "experiment,system,backend,dataset,set,total_set_matrices,misses,accuracy\n"
-    )
-    f.write(header)
-    accuracy = (1 - misses / nval_samples) * 100
-    f.write(
-        f"{experiment},{system},{backend},{dataset},val,{total_set_matrices},{misses},{accuracy:.4f}\n"
-    )

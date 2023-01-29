@@ -1,0 +1,13 @@
+system,backend,dataset,set,class_id,class_matrices,total_set_matrices,set_percentage,total_dataset_matrices,dataset_percentage
+a64fx,serial,square_set,train,0,472,1515,31.16,1896,24.89
+a64fx,serial,square_set,train,1,736,1515,48.58,1896,38.82
+a64fx,serial,square_set,train,2,44,1515,2.90,1896,2.32
+a64fx,serial,square_set,train,3,0,1515,0.00,1896,0.00
+a64fx,serial,square_set,train,4,0,1515,0.00,1896,0.00
+a64fx,serial,square_set,train,5,263,1515,17.36,1896,13.87
+a64fx,serial,square_set,test,0,119,381,31.23,1896,6.28
+a64fx,serial,square_set,test,1,184,381,48.29,1896,9.70
+a64fx,serial,square_set,test,2,12,381,3.15,1896,0.63
+a64fx,serial,square_set,test,3,0,381,0.00,1896,0.00
+a64fx,serial,square_set,test,4,0,381,0.00,1896,0.00
+a64fx,serial,square_set,test,5,66,381,17.32,1896,3.48
