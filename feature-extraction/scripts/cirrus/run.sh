@@ -42,7 +42,7 @@ qos="standard"
 if [ "serial" == "$backend" ]; then
   queue="standard"
   qos="standard"
-  ncpus="--tasks-per-node=1 --cpus-per-task=1"
+  ncpus="--tasks-per-node=1 --cpus-per-task=36"
   ngpus=""
 elif [ "openmp" == "$backend" ]; then
   queue="standard"
@@ -59,13 +59,18 @@ else
  exit 1
 fi
 
+if [ "small_set" != "$DATA_SET" ] && [ "square_set" != "$DATA_SET" ]; then
+ echo "Invalid dataset ($DATA_SET)!"
+ echo -e "\tAvailable datasets: [small_set | square_set]"
+ exit 1
+fi
+
 if [ -z "$3" ]; then
   ACCOUNT=e609
 else
   ACCOUNT=$budget
 fi
 
-DATA_SET=small_set
 DATA_PATH=$CIRRUS_SCRIPT_PATH/../../../data/$DATA_SET/matrices
 RUN_PATH=$CIRRUS_SCRIPT_PATH/run/$DATA_SET/$backend
 EXE=$CIRRUS_SCRIPT_PATH/build/$backend/src/SparseTree_Features
@@ -81,8 +86,19 @@ echo -e "\tQueue   : $queue"
 
 mkdir -p $RUN_PATH
 
-sbatch --exclusive --nodes=1 --time=24:00:00 --partition=$queue \
-  --qos=$qos $ncpus $ngpus --account=$ACCOUNT --job-name=fe-$backend-run \
-  --output=$RUN_PATH/$queue-report.out \
-  --error=$RUN_PATH/$queue-report.err \
-  $CIRRUS_SCRIPT_PATH/run.fe.slurm $RUN_PATH $DATA_PATH $EXE $backend
+INCREMENT=100
+LOW_BOUND=0
+UPPER_BOUND=$(( $LOW_BOUND + $INCREMENT ))
+
+while [ $LOW_BOUND -lt 2200 ]; do
+  DATADIR=$DATA_PATH/$LOW_BOUND\_$UPPER_BOUND
+
+  sbatch --exclusive --nodes=1 --time=24:00:00 --partition=$queue \
+    --qos=$qos $ncpus $ngpus --account=$ACCOUNT --job-name=fe-$backend-run \
+    --output=$RUN_PATH/$queue-report-$LOW_BOUND\_$UPPER_BOUND.out \
+    --error=$RUN_PATH/$queue-report-$LOW_BOUND\_$UPPER_BOUND.err \
+    $CIRRUS_SCRIPT_PATH/run.fe.slurm $RUN_PATH $DATADIR $EXE $backend
+
+  LOW_BOUND=$(( $LOW_BOUND + $INCREMENT ))
+  UPPER_BOUND=$(( $UPPER_BOUND + $INCREMENT ))
+done

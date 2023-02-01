@@ -29,7 +29,7 @@ import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
+from sklearn.metrics import balanced_accuracy_score
 
 parser = argparse.ArgumentParser()
 # Basename of format <dataset>-features.csv
@@ -123,6 +123,13 @@ clf_base.extract(
     os.path.join(experiment_path, "baseline"),
     matrices.feature_names,
 )
+# print(clf_base.score(split["test"]["data"], split["test"]["target"]))
+# print(
+#     balanced_accuracy_score(
+#         clf_base.predict(split["test"]["data"]), split["test"]["target"]
+#     )
+# )
+# print(clf_base.feature_importances_)
 
 tuned_max_features = tuned_df.max_features[0]
 if tuned_max_features == "None":
@@ -149,3 +156,10 @@ clf_tuned.extract(
     os.path.join(experiment_path, "tuned"),
     matrices.feature_names,
 )
+# print(clf_tuned.score(split["test"]["data"], split["test"]["target"]))
+# print(
+#     balanced_accuracy_score(
+#         clf_tuned.predict(split["test"]["data"]), split["test"]["target"]
+#     )
+# )
+# print(clf_tuned.feature_importances_)

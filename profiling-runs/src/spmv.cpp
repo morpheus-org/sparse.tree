@@ -46,9 +46,9 @@ using exec_space_t = typename morpheus_space_t::OpenMP::execution_space;
 using mem_space_t  = typename morpheus_space_t::OpenMP::memory_space;
 using backend_t    = typename morpheus_space_t::OpenMP::backend;
 #elif defined(SparseTree_ENABLE_CUDA)
-using exec_space_t = typename morpheus_space_t::Cuda::execution_space;
-using mem_space_t  = typename morpheus_space_t::Cuda::memory_space;
-using backend_t    = typename morpheus_space_t::Cuda::backend;
+using exec_space_t         = typename morpheus_space_t::Cuda::execution_space;
+using mem_space_t          = typename morpheus_space_t::Cuda::memory_space;
+using backend_t            = typename morpheus_space_t::Cuda::backend;
 #elif defined(SparseTree_ENABLE_HIP)
 using exec_space_t = typename morpheus_space_t::HIP::execution_space;
 using mem_space_t  = typename morpheus_space_t::HIP::memory_space;
@@ -86,6 +86,7 @@ void tune_spmv(Matrix& A, int reps, Timings_t& timings) {
       for (int rep = 0; rep < reps; rep++) {
         auto start = std::chrono::steady_clock::now();
         Morpheus::multiply<ExecSpace>(A, x, y, true);
+        Kokkos::fence();
         auto end = std::chrono::steady_clock::now();
 
         timings(fmt_idx, rep) =

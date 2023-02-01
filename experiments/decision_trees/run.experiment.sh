@@ -24,20 +24,3 @@ for frun in $PROFILINGS_PATH/*; do
     $SCRIPT_PATH/run.tuning.slurm $SCRIPT_PATH $name $ffeatures $frun
 done
 
-# # merge accuracy of each experiment in single file
-# fout=$SCRIPT_PATH/$name/$name-accuracy.csv
-# write_header=1
-# for experiment in $SCRIPT_PATH/$name/*/; do
-#     FILE=$experiment/accuracy.csv
-#     if [ $write_header -eq 1 ]; then
-#         header="$(sed -n "1 p" $FILE)"
-#         echo $header > $fout
-#         write_header=0
-#     fi
-#     # count lines in a file
-#     nlines=$(wc -l < $FILE)
-#     for i in $(seq 2 ${nlines}); do
-#       entry="$(sed -n "$i p" $FILE)"
-#       echo $entry >> $fout
-#     done
-# done

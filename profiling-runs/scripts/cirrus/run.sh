@@ -65,6 +65,10 @@ if [ "small_set" != "$DATA_SET" ] && [ "square_set" != "$DATA_SET" ]; then
  echo "Invalid dataset ($DATA_SET)!"
  echo -e "\tAvailable datasets: [small_set | square_set]"
  exit 1
+elif [ "small_set" == "$DATA_SET" ]; then
+  MAX_BOUND=100
+elif [ "square_set" == "$DATA_SET" ]; then
+  MAX_BOUND=2200
 fi
 
 if [ -z "$3" ]; then
@@ -92,7 +96,7 @@ INCREMENT=100
 LOW_BOUND=0
 UPPER_BOUND=$(( $LOW_BOUND + $INCREMENT ))
 
-while [ $LOW_BOUND -lt 2200 ]; do
+while [ $LOW_BOUND -lt $MAX_BOUND ]; do
   DATADIR=$DATA_PATH/$LOW_BOUND\_$UPPER_BOUND
 
   sbatch --exclusive --nodes=1 --time=24:00:00 --partition=$queue \

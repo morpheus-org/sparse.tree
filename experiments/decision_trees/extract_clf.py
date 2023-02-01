@@ -30,6 +30,11 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+from sklearn.metrics import (
+    balanced_accuracy_score,
+    confusion_matrix,
+    ConfusionMatrixDisplay,
+)
 
 parser = argparse.ArgumentParser()
 # Basename of format <dataset>-features.csv
@@ -117,10 +122,17 @@ clf_base = DecisionTreeClassifier(
     class_weight=base_df.class_weight[0] if base_df.class_weight[0] != "None" else None,
 )
 clf_base = clf_base.fit(train_data, train_labels)
-clf_base.extract(
-    os.path.join(experiment_path, "baseline_tree.txt"),
-    matrices.feature_names,
+# clf_base.extract(
+#     os.path.join(experiment_path, "baseline_tree.txt"),
+#     matrices.feature_names,
+# )
+print(clf_base.score(split["test"]["data"], split["test"]["target"]))
+print(
+    balanced_accuracy_score(
+        clf_base.predict(split["test"]["data"]), split["test"]["target"]
+    )
 )
+print(clf_base.feature_importances_)
 
 tuned_max_features = tuned_df.max_features[0]
 if tuned_max_features == "None":
@@ -141,7 +153,27 @@ clf_tuned = DecisionTreeClassifier(
     else None,
 )
 clf_tuned = clf_tuned.fit(train_data, train_labels)
-clf_tuned.extract(
-    os.path.join(experiment_path, "tuned_tree.txt"),
-    matrices.feature_names,
+# clf_tuned.extract(
+#     os.path.join(experiment_path, "tuned_tree.txt"),
+#     matrices.feature_names,
+# )
+print(clf_tuned.score(split["test"]["data"], split["test"]["target"]))
+print(
+    balanced_accuracy_score(
+        clf_tuned.predict(split["test"]["data"]), split["test"]["target"]
+    )
 )
+print(clf_tuned.feature_importances_)
+
+# tuned confusion
+fcm_tuned = "tuned_cm.jpg"
+cm_tuned = confusion_matrix(
+    split["test"]["target"],
+    clf_tuned.predict(split["test"]["data"]),
+    labels=clf_tuned.classes_,
+)
+disp = ConfusionMatrixDisplay(
+    confusion_matrix=cm_tuned, display_labels=clf_tuned.classes_
+)
+disp.plot()
+plt.savefig(fcm_tuned)

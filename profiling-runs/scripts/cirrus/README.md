@@ -43,7 +43,7 @@ BUDGET=d403-cs
 ```sh
 $ BACKEND=[serial | openmp | cuda]
 $ DATASET=/path/to/dataset
-$ REPETITIONS=500
+$ REPETITIONS=1000
 $ BUDGET=[budget code]
 $ ./run.sh $BACKEND $DATASET $REPETITIONS $BUDGET
 ```
@@ -52,8 +52,8 @@ $ ./run.sh $BACKEND $DATASET $REPETITIONS $BUDGET
 ```sh
 WORK_DIR=/work/d403/d403/cstyl16
 BACKEND=serial
-DATASET=$WORK_DIR/sparse.tree/data/small_set
-REPETITIONS=500
+DATASET=square_set
+REPETITIONS=1000
 BUDGET=d403-cs
 ./run.sh $BACKEND $DATASET $REPETITIONS $BUDGET
 ```
@@ -62,8 +62,8 @@ BUDGET=d403-cs
 ```sh
 WORK_DIR=/work/d403/d403/cstyl16
 BACKEND=openmp
-DATASET=$WORK_DIR/sparse.tree/data/small_set
-REPETITIONS=500
+DATASET=square_set
+REPETITIONS=1000
 BUDGET=d403-cs
 ./run.sh $BACKEND $DATASET $REPETITIONS $BUDGET
 ```
@@ -72,8 +72,8 @@ BUDGET=d403-cs
 ```sh
 WORK_DIR=/work/d403/d403/cstyl16
 BACKEND=cuda
-DATASET=$WORK_DIR/sparse.tree/data/small_set
-REPETITIONS=500
+DATASET=square_set
+REPETITIONS=1000
 BUDGET=d403-cs
 ./run.sh $BACKEND $DATASET $REPETITIONS $BUDGET
 ```

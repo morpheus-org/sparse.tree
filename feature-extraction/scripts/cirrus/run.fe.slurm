@@ -9,7 +9,7 @@ module load gcc/10.2.0
 
 if [ "serial" == "$BACKEND" ]; then
   export OMP_NUM_THREADS=36 
-  ncpus="--tasks-per-node=1 --cpus-per-task=1"
+  ncpus="--tasks-per-node=1 --cpus-per-task=36"
   NTHREADS=1
   NGPUS=0
 elif [ "openmp" == "$BACKEND" ]; then
@@ -32,12 +32,13 @@ elif [ "cuda" == "$BACKEND" ]; then
 fi
 
 FMT_ID=0
-
+SET=$(basename $DATA_PATH)
+LOG_FILE="$RUN_PATH/$SET.log"
 echo -e "Generating features for $BACKEND backend:"
 for FILE in $DATA_PATH/*; do 
   MATRIX=$(basename $FILE)
   MATRIX_FILE="$FILE/$MATRIX.mtx"
-  OUTDIR="$RUN_PATH/$MATRIX"
+  OUTDIR="$RUN_PATH/matrices/$MATRIX"
 
   mkdir -p $OUTDIR
   

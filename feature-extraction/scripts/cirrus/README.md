@@ -51,7 +51,7 @@ $ ./run.sh $BACKEND $DATASET $BUDGET
 ```sh
 WORK_DIR=/work/d403/d403/cstyl16
 BACKEND=serial
-DATASET=small_set
+DATASET=square_set
 BUDGET=d403-cs
 ./run.sh $BACKEND $DATASET $BUDGET
 ```
@@ -60,7 +60,7 @@ BUDGET=d403-cs
 ```sh
 WORK_DIR=/work/d403/d403/cstyl16
 BACKEND=openmp
-DATASET=small_set
+DATASET=square_set
 BUDGET=d403-cs
 ./run.sh $BACKEND $DATASET $BUDGET
 ```
@@ -69,7 +69,7 @@ BUDGET=d403-cs
 ```sh
 WORK_DIR=/work/d403/d403/cstyl16
 BACKEND=cuda
-DATASET=small_set
+DATASET=square_set
 BUDGET=d403-cs
 ./run.sh $BACKEND $DATASET $BUDGET
 ```

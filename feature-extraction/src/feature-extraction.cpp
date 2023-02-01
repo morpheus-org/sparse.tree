@@ -140,7 +140,7 @@ int main(int argc, char* argv[]) {
   features[7] = Morpheus::std<backend_t>(nnz_per_row, nnz_per_row.size(),
                                          Morpheus::average_nnnz(A));
   features[8] = Morpheus::count_nnz<backend_t>(nnz_per_diag);
-  features[9] = Morpheus::count_nnz<backend_t>(nnz_per_diag, A.nrows() / 4);
+  features[9] = Morpheus::count_nnz<backend_t>(nnz_per_diag, A.nrows() / 5);
 
   std::stringstream ss;
   generate_line(ss, feature_names, features_size);

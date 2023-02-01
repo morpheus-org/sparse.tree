@@ -5,11 +5,13 @@ DATA_PATH=$2
 EXE=$3
 BACKEND=$4
 REPS=$5
+# MATRIX=$6
+# FILE=$7
 
 module load gcc/10.2.0
 
 if [ "serial" == "$BACKEND" ]; then
-  export OMP_NUM_THREADS=36 
+  export OMP_NUM_THREADS=1 
   ncpus="--hint=nomultithread --exclusive --nodes=1 --ntasks=1 --tasks-per-node=1 --cpus-per-task=36"
   NTHREADS=1
   NGPUS=0

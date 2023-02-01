@@ -14,5 +14,6 @@ for frun in $PROFILINGS_PATH/*; do
   experiment=${experiment_csv%.*}
   fparams=$PARAMETERS_PATH/$experiment/results.csv
   
+  echo $experiment
   python $SCRIPT_PATH/extract_clf.py --features=$ffeatures --runtimes=$frun --parameters=$fparams
 done
