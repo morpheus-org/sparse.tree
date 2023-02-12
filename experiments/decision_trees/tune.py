@@ -24,11 +24,12 @@
 from sparse_tree.dataset import MatrixDataset
 from sparse_tree.classifier import DecisionTreeClassifier
 
-from sklearn.model_selection import RandomizedSearchCV, GridSearchCV
+from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import (
     precision_score,
     recall_score,
     f1_score,
+    balanced_accuracy_score,
     confusion_matrix,
     ConfusionMatrixDisplay,
 )
@@ -94,6 +95,8 @@ clf = DecisionTreeClassifier(random_state=10)
 clf_base = clf.fit(train_data, train_labels)
 
 NFEATURES = clf_base.n_features_in_
+experiment_path = os.path.join(experiment_path, str(NFEATURES))
+os.makedirs(experiment_path, exist_ok=True)
 BASELINE_MAX_DEPTH = clf_base.tree_.max_depth
 depth_step = 1
 max_depths = [BASELINE_MAX_DEPTH]
@@ -143,7 +146,6 @@ clf = DecisionTreeClassifier(
 )
 clf = clf.fit(train_data, train_labels)
 
-
 base_accuracy = clf_base.score(test_data, test_labels)
 tuned_accuracy = clf.score(test_data, test_labels)
 
@@ -154,7 +156,7 @@ tuned_predicted = clf.predict(test_data)
 fres = os.path.join(experiment_path, "results.csv")
 print(f"Writing Results: ", fres)
 with open(fres, "w") as f:
-    header = "experiment,system,backend,dataset,model,max_depth,min_samples_leaf,min_samples_split,max_features,splitter,criterion,class_weight,accuracy,precision,recall,fscore\n"
+    header = "experiment,system,backend,dataset,model,max_depth,min_samples_leaf,min_samples_split,max_features,splitter,criterion,class_weight,accuracy,precision,recall,fscore,balanced_accuracy\n"
     f.write(header)
     max_depth = tune_parameters["max_depth"]
     min_samples_leaf = tune_parameters["min_samples_leaf"]
@@ -179,13 +181,14 @@ with open(fres, "w") as f:
     base_f1 = f1_score(test_labels, base_predicted, average=None)
     tuned_f1 = f1_score(test_labels, tuned_predicted, average=None)
 
+    base_bal_acc = balanced_accuracy_score(clf_base.predict(test_data), test_labels)
+    tuned_bal_acc = balanced_accuracy_score(clf.predict(test_data), test_labels)
+
     system_metrics = f"{experiment},{system},{backend},{dataset},"
     params = f"{max_depth},{min_samples_leaf},{min_samples_split},{max_features},{splitter},{criterion},{class_weight},"
 
-    base_metrics = (
-        f"{base_accuracy:.6f},{base_wprecision:.6f},{base_wrecall:.6f},{base_wf1:.6f}"
-    )
-    tuned_metrics = f"{tuned_accuracy:.6f},{tuned_wprecision:.6f},{tuned_wrecall:.6f},{tuned_wf1:.6f}"
+    base_metrics = f"{base_accuracy:.6f},{base_wprecision:.6f},{base_wrecall:.6f},{base_wf1:.6f},{base_bal_acc:.6f}"
+    tuned_metrics = f"{tuned_accuracy:.6f},{tuned_wprecision:.6f},{tuned_wrecall:.6f},{tuned_wf1:.6f},{tuned_bal_acc:.6f}"
 
     base_entry = (
         system_metrics + "baseline,None,1,2,None,best,gini,None," + base_metrics + "\n"

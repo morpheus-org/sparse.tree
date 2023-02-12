@@ -56,6 +56,15 @@ parser.add_argument(
     dest="parameters",
     help="Absolute path to the parameters file.",
 )
+
+# Number of features
+parser.add_argument(
+    "--nfeatures",
+    type=int,
+    required=True,
+    dest="nfeatures",
+    help="Number of features.",
+)
 args = parser.parse_args()
 
 script_path = os.path.realpath(os.path.dirname(__file__))
@@ -68,7 +77,7 @@ dataset = rt_base.split("-")[1]
 backend = rt_base.split("-")[2]
 repetitions = rt_base.split("-")[3].replace(".csv", "")
 exp_lbl = "-".join([system, dataset, backend, repetitions])
-experiment_path = os.path.join(tune_path, exp_lbl)
+experiment_path = os.path.join(tune_path, exp_lbl, str(args.nfeatures))
 os.makedirs(experiment_path, exist_ok=True)
 
 matrices = MatrixDataset(args.features, args.runtimes)
@@ -123,13 +132,6 @@ clf_base.extract(
     os.path.join(experiment_path, "baseline"),
     matrices.feature_names,
 )
-# print(clf_base.score(split["test"]["data"], split["test"]["target"]))
-# print(
-#     balanced_accuracy_score(
-#         clf_base.predict(split["test"]["data"]), split["test"]["target"]
-#     )
-# )
-# print(clf_base.feature_importances_)
 
 tuned_max_features = tuned_df.max_features[0]
 if tuned_max_features == "None":
@@ -156,10 +158,3 @@ clf_tuned.extract(
     os.path.join(experiment_path, "tuned"),
     matrices.feature_names,
 )
-# print(clf_tuned.score(split["test"]["data"], split["test"]["target"]))
-# print(
-#     balanced_accuracy_score(
-#         clf_tuned.predict(split["test"]["data"]), split["test"]["target"]
-#     )
-# )
-# print(clf_tuned.feature_importances_)

@@ -46,6 +46,14 @@ parser.add_argument(
     dest="runtimes",
     help="Absolute path to the profilings file.",
 )
+# Number of features
+parser.add_argument(
+    "--nfeatures",
+    type=int,
+    required=True,
+    dest="nfeatures",
+    help="Number of features.",
+)
 args = parser.parse_args()
 
 script_path = os.path.realpath(os.path.dirname(__file__))
@@ -59,7 +67,7 @@ backend = rt_base.split("-")[2]
 repetitions = rt_base.split("-")[3].replace(".csv", "")
 nclasses = 6
 exp_lbl = "-".join([system, dataset, backend, repetitions])
-experiment_path = os.path.join(baseline_path, exp_lbl)
+experiment_path = os.path.join(baseline_path, exp_lbl, str(args.nfeatures))
 os.makedirs(experiment_path, exist_ok=True)
 
 matrices = MatrixDataset(args.features, args.runtimes)

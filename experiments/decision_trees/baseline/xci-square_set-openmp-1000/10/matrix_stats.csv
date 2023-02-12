@@ -1,0 +1,13 @@
+system,backend,dataset,set,class_id,class_matrices,total_set_matrices,set_percentage,total_dataset_matrices,dataset_percentage
+xci,openmp,square_set,train,0,107,1679,6.37,2100,5.10
+xci,openmp,square_set,train,1,1530,1679,91.13,2100,72.86
+xci,openmp,square_set,train,2,40,1679,2.38,2100,1.90
+xci,openmp,square_set,train,3,0,1679,0.00,2100,0.00
+xci,openmp,square_set,train,4,0,1679,0.00,2100,0.00
+xci,openmp,square_set,train,5,2,1679,0.12,2100,0.10
+xci,openmp,square_set,test,0,27,421,6.41,2100,1.29
+xci,openmp,square_set,test,1,383,421,90.97,2100,18.24
+xci,openmp,square_set,test,2,11,421,2.61,2100,0.52
+xci,openmp,square_set,test,3,0,421,0.00,2100,0.00
+xci,openmp,square_set,test,4,0,421,0.00,2100,0.00
+xci,openmp,square_set,test,5,0,421,0.00,2100,0.00

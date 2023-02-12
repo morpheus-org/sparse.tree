@@ -1,0 +1,32 @@
+#!/bin/bash --login
+
+SCRIPT_PATH=$SCRIPT_PATH
+FE_ROOT_PATH=$FE_ROOT_DIR
+BUILD_PATH=$BUILD_PATH
+BACKEND=$BACKEND
+MORPHEUS_PATH=$MORPHEUS_PATH
+KOKKOS_PATH=$KOKKOS_PATH
+
+FE_INSTALL_DIR=$SCRIPT_PATH/installs/$BACKEND
+
+# Load CMake and GCC
+module use -a /lustre/projects/bristol/modules/modulefiles
+module load cmake
+module load gcc/10.3.0
+
+BACKEND_SERIAL="ON"
+BACKEND_OPENMP="OFF"
+
+CXX_COMPILER=$(which g++)
+if [ "openmp" == "$BACKEND" ]; then
+  BACKEND_OPENMP="ON"
+fi
+
+mkdir -p $BUILD_PATH && cd $BUILD_PATH
+cmake $FE_ROOT_PATH -DCMAKE_CXX_COMPILER=${CXX_COMPILER} \
+                    -DCMAKE_BUILD_TYPE=Release \
+                    -DCMAKE_INSTALL_PREFIX=${FE_INSTALL_DIR} \
+                    -DCMAKE_CXX_EXTENSIONS=Off \
+                    -DMorpheus_ROOT=${MORPHEUS_PATH} \
+                    -DSparseTree_ENABLE_SERIAL=${BACKEND_SERIAL} \
+                    -DSparseTree_ENABLE_OPENMP=${BACKEND_OPENMP} && make -j

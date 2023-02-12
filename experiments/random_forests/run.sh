@@ -6,11 +6,10 @@ SCRIPT_PATH="$(
 )"
 FEATURES_PATH=$SCRIPT_PATH/../features
 PROFILINGS_PATH=$SCRIPT_PATH/../profiling_runs
-ffeatures=$FEATURES_PATH/square_set-features.csv
+ffeatures=$FEATURES_PATH/square_set-features-10.csv
 
 
 for frun in $PROFILINGS_PATH/*; do
     echo "python $SCRIPT_PATH/tuned.py --features=$ffeatures --runtimes=$frun"
     python $SCRIPT_PATH/test.py --features=$ffeatures --runtimes=$frun
 done
-

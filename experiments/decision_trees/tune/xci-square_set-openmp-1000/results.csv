@@ -1,3 +1,0 @@
-experiment,system,backend,dataset,model,max_depth,min_samples_leaf,min_samples_split,max_features,splitter,criterion,class_weight,accuracy,precision,recall,fscore
-tune,xci,openmp,square_set,baseline,None,1,2,None,best,gini,None,0.781991,0.775190,0.781991,0.778521
-tune,xci,openmp,square_set,tuned,5,6,2,3,best,entropy,None,0.838863,0.766683,0.838863,0.799137

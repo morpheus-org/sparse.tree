@@ -13,7 +13,7 @@ parser.add_argument(
     "--fout",
     type=str,
     required=True,
-    dest="fset",
+    dest="fout",
     help="Absolute path to the output file.",
 )
 args = parser.parse_args()

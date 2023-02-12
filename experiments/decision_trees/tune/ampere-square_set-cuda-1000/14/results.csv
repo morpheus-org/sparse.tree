@@ -1,0 +1,3 @@
+experiment,system,backend,dataset,model,max_depth,min_samples_leaf,min_samples_split,max_features,splitter,criterion,class_weight,accuracy,precision,recall,fscore,balanced_accuracy
+tune,ampere,cuda,square_set,baseline,None,1,2,None,best,gini,None,0.833729,0.837323,0.833729,0.835209,0.675255
+tune,ampere,cuda,square_set,tuned,6,2,10,11,best,gini,None,0.864608,0.869440,0.864608,0.859620,0.825754

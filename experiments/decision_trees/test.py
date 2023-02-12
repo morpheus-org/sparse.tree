@@ -29,6 +29,7 @@ from sklearn.metrics import (
     precision_score,
     recall_score,
     f1_score,
+    balanced_accuracy_score,
     confusion_matrix,
     ConfusionMatrixDisplay,
 )
@@ -73,8 +74,12 @@ split = matrices.split(
 
 train_data = split["train"]["data"]
 train_labels = split["train"]["target"]
+test_data = split["test"]["data"]
+test_labels = split["test"]["target"]
 
 clf = DecisionTreeClassifier(random_state=10)
 clf_base = clf.fit(train_data, train_labels)
-
-print(clf_base.tree_.max_depth)
+base_accuracy = clf_base.score(test_data, test_labels)
+base_bal_acc = balanced_accuracy_score(clf_base.predict(test_data), test_labels)
+print(base_accuracy, base_bal_acc)
+print(clf_base.feature_importances_)

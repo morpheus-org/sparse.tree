@@ -75,7 +75,7 @@ UPPER_BOUND=$(( $LOW_BOUND + $INCREMENT ))
 while [ $LOW_BOUND -lt $MAX_BOUND ]; do
   DATADIR=$DATA_PATH/$LOW_BOUND\_$UPPER_BOUND
 
-  qsub -q $queue -l select=1:ncpus=48 -l place=excl -l walltime=48:00:00  \
+  qsub -q $queue -l select=1:ncpus=48 -l place=excl -l walltime=24:00:00  \
      -o $RUN_PATH/$queue-report-$LOW_BOUND\_$UPPER_BOUND.out \
      -e $RUN_PATH/$queue-report-$LOW_BOUND\_$UPPER_BOUND.err \
      -N "profiling-$queue-run" \

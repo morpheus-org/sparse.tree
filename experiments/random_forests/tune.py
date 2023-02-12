@@ -24,11 +24,12 @@
 from sparse_tree.dataset import MatrixDataset
 from sparse_tree.classifier import RandomForestClassifier
 
-from sklearn.model_selection import RandomizedSearchCV, GridSearchCV
+from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import (
     precision_score,
     recall_score,
     f1_score,
+    balanced_accuracy_score,
     confusion_matrix,
     ConfusionMatrixDisplay,
 )
@@ -96,6 +97,9 @@ for estimator in clf_base.estimators_:
         BASELINE_MAX_DEPTH = max_depth
 
 NFEATURES = clf_base.n_features_in_
+experiment_path = os.path.join(experiment_path, str(NFEATURES))
+os.makedirs(experiment_path, exist_ok=True)
+
 depth_step = 1
 max_depths = [BASELINE_MAX_DEPTH]
 ctr = 0
@@ -157,7 +161,7 @@ tuned_predicted = clf.predict(test_data)
 fres = os.path.join(experiment_path, "results.csv")
 print(f"Writing Results: ", fres)
 with open(fres, "w") as f:
-    header = "experiment,system,backend,dataset,model,n_estimators,bootstrap,max_depth,min_samples_leaf,min_samples_split,max_features,criterion,class_weight,accuracy,precision,recall,fscore\n"
+    header = "experiment,system,backend,dataset,model,n_estimators,bootstrap,max_depth,min_samples_leaf,min_samples_split,max_features,criterion,class_weight,accuracy,precision,recall,fscore,balanced_accuracy\n"
     f.write(header)
     n_estimators = tune_parameters["n_estimators"]
     bootstrap = tune_parameters["bootstrap"]
@@ -183,13 +187,14 @@ with open(fres, "w") as f:
     base_f1 = f1_score(test_labels, base_predicted, average=None)
     tuned_f1 = f1_score(test_labels, tuned_predicted, average=None)
 
+    base_bal_acc = balanced_accuracy_score(clf_base.predict(test_data), test_labels)
+    tuned_bal_acc = balanced_accuracy_score(clf.predict(test_data), test_labels)
+
     system_metrics = f"{experiment},{system},{backend},{dataset},"
     params = f"{n_estimators},{bootstrap},{max_depth},{min_samples_leaf},{min_samples_split},{max_features},{criterion},{class_weight},"
 
-    base_metrics = (
-        f"{base_accuracy:.6f},{base_wprecision:.6f},{base_wrecall:.6f},{base_wf1:.6f}"
-    )
-    tuned_metrics = f"{tuned_accuracy:.6f},{tuned_wprecision:.6f},{tuned_wrecall:.6f},{tuned_wf1:.6f}"
+    base_metrics = f"{base_accuracy:.6f},{base_wprecision:.6f},{base_wrecall:.6f},{base_wf1:.6f},{base_bal_acc:.6f}"
+    tuned_metrics = f"{tuned_accuracy:.6f},{tuned_wprecision:.6f},{tuned_wrecall:.6f},{tuned_wf1:.6f},{tuned_bal_acc:.6f}"
 
     base_entry = (
         system_metrics
@@ -216,4 +221,3 @@ cm_tuned = confusion_matrix(test_labels, tuned_predicted, labels=clf.classes_)
 disp = ConfusionMatrixDisplay(confusion_matrix=cm_tuned, display_labels=clf.classes_)
 disp.plot()
 plt.savefig(fcm_tuned)
-# Fitting 5 folds for each of 1425600 candidates, totalling 7128000 fits

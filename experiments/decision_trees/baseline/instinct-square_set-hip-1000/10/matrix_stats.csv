@@ -1,0 +1,13 @@
+system,backend,dataset,set,class_id,class_matrices,total_set_matrices,set_percentage,total_dataset_matrices,dataset_percentage
+instinct,hip,square_set,train,0,118,1679,7.03,2102,5.61
+instinct,hip,square_set,train,1,1093,1679,65.10,2102,52.00
+instinct,hip,square_set,train,2,38,1679,2.26,2102,1.81
+instinct,hip,square_set,train,3,71,1679,4.23,2102,3.38
+instinct,hip,square_set,train,4,59,1679,3.51,2102,2.81
+instinct,hip,square_set,train,5,300,1679,17.87,2102,14.27
+instinct,hip,square_set,test,0,30,423,7.09,2102,1.43
+instinct,hip,square_set,test,1,274,423,64.78,2102,13.04
+instinct,hip,square_set,test,2,10,423,2.36,2102,0.48
+instinct,hip,square_set,test,3,18,423,4.26,2102,0.86
+instinct,hip,square_set,test,4,15,423,3.55,2102,0.71
+instinct,hip,square_set,test,5,76,423,17.97,2102,3.62

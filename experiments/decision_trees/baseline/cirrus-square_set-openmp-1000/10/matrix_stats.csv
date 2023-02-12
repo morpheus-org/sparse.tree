@@ -1,0 +1,13 @@
+system,backend,dataset,set,class_id,class_matrices,total_set_matrices,set_percentage,total_dataset_matrices,dataset_percentage
+cirrus,openmp,square_set,train,0,155,1684,9.20,2106,7.36
+cirrus,openmp,square_set,train,1,1424,1684,84.56,2106,67.62
+cirrus,openmp,square_set,train,2,75,1684,4.45,2106,3.56
+cirrus,openmp,square_set,train,3,1,1684,0.06,2106,0.05
+cirrus,openmp,square_set,train,4,1,1684,0.06,2106,0.05
+cirrus,openmp,square_set,train,5,28,1684,1.66,2106,1.33
+cirrus,openmp,square_set,test,0,39,422,9.24,2106,1.85
+cirrus,openmp,square_set,test,1,356,422,84.36,2106,16.90
+cirrus,openmp,square_set,test,2,19,422,4.50,2106,0.90
+cirrus,openmp,square_set,test,3,0,422,0.00,2106,0.00
+cirrus,openmp,square_set,test,4,0,422,0.00,2106,0.00
+cirrus,openmp,square_set,test,5,8,422,1.90,2106,0.38

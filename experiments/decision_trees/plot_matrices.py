@@ -62,6 +62,7 @@ os.makedirs(outdir, exist_ok=True)
 
 dataset = "square_set"
 repetitions = "1000"
+nfeatures = 10
 
 systems = {
     "a64fx": ["serial", "openmp"],
@@ -76,7 +77,9 @@ dfs = []
 for system, backends in systems.items():
     for backend in backends:
         path = os.path.join(
-            experiments_path, f"{system}-{dataset}-{backend}-{repetitions}"
+            experiments_path,
+            f"{system}-{dataset}-{backend}-{repetitions}",
+            str(nfeatures),
         )
         dfs.append(pd.read_csv(os.path.join(path, "matrix_stats.csv")))
 
@@ -241,4 +244,4 @@ l2 = plt.legend(
 l2._legend_box.align = "center"
 ax.add_artist(l2)
 plt.tight_layout(rect=[0, 0, 0.8, 1])
-fig.savefig(os.path.join(outdir, "matrix_distribution.pdf"))
+fig.savefig(os.path.join(outdir, f"matrix_distribution.pdf"))
