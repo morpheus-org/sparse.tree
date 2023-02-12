@@ -34,14 +34,19 @@ for mat_path in $dmat/*/*; do
   done < "$fmat"
 done
 
+# ISAMBARD
 # ./generate_paths.sh /lustre/home/ri-cstylianou/sparse.tree/experiments/utils/test_lists/matrices-a64fx-square_set-openmp-1000.txt /lustre/home/ri-cstylianou/sparse.tree/data/square_set/matrices
 # ./generate_paths.sh /lustre/home/ri-cstylianou/sparse.tree/experiments/utils/test_lists/matrices-a64fx-square_set-serial-1000.txt /lustre/home/ri-cstylianou/sparse.tree/data/square_set/matrices
 # ./generate_paths.sh /lustre/home/ri-cstylianou/sparse.tree/experiments/utils/test_lists/matrices-ampere-square_set-cuda-1000.txt /lustre/home/ri-cstylianou/sparse.tree/data/square_set/matrices
-# ./generate_paths.sh /lustre/home/ri-cstylianou/sparse.tree/experiments/utils/test_lists/matrices-archer2-square_set-openmp-1000.txt /lustre/home/ri-cstylianou/sparse.tree/data/square_set/matrices
-# ./generate_paths.sh /lustre/home/ri-cstylianou/sparse.tree/experiments/utils/test_lists/matrices-archer2-square_set-serial-1000.txt /lustre/home/ri-cstylianou/sparse.tree/data/square_set/matrices
-# ./generate_paths.sh /lustre/home/ri-cstylianou/sparse.tree/experiments/utils/test_lists/matrices-cirrus-square_set-cuda-1000.txt /lustre/home/ri-cstylianou/sparse.tree/data/square_set/matrices
-# ./generate_paths.sh /lustre/home/ri-cstylianou/sparse.tree/experiments/utils/test_lists/matrices-cirrus-square_set-openmp-1000.txt /lustre/home/ri-cstylianou/sparse.tree/data/square_set/matrices
-# ./generate_paths.sh /lustre/home/ri-cstylianou/sparse.tree/experiments/utils/test_lists/matrices-cirrus-square_set-serial-1000.txt /lustre/home/ri-cstylianou/sparse.tree/data/square_set/matrices
 # ./generate_paths.sh /lustre/home/ri-cstylianou/sparse.tree/experiments/utils/test_lists/matrices-instinct-square_set-hip-1000.txt /lustre/home/ri-cstylianou/sparse.tree/data/square_set/matrices
 # ./generate_paths.sh /lustre/home/ri-cstylianou/sparse.tree/experiments/utils/test_lists/matrices-xci-square_set-openmp-1000.txt /lustre/home/ri-cstylianou/sparse.tree/data/square_set/matrices
 # ./generate_paths.sh /lustre/home/ri-cstylianou/sparse.tree/experiments/utils/test_lists/matrices-xci-square_set-serial-1000.txt /lustre/home/ri-cstylianou/sparse.tree/data/square_set/matrices
+
+# Archer2
+# ./generate_paths.sh /work/e609/e609/cstyl//sparse.tree/experiments/utils/test_lists/matrices-archer2-square_set-openmp-1000.txt /work/e609/e609/cstyl/sparse.tree/data/square_set/matrices
+# ./generate_paths.sh /work/e609/e609/cstyl//sparse.tree/experiments/utils/test_lists/matrices-archer2-square_set-serial-1000.txt /work/e609/e609/cstyl/sparse.tree/data/square_set/matrices
+
+# Cirrus
+# ./generate_paths.sh /work/d403/d403/cstyl16/sparse.tree/experiments/utils/test_lists/matrices-cirrus-square_set-cuda-1000.txt   /work/d403/d403/cstyl16/sparse.tree/data/square_set/matrices
+# ./generate_paths.sh /work/d403/d403/cstyl16/sparse.tree/experiments/utils/test_lists/matrices-cirrus-square_set-openmp-1000.txt /work/d403/d403/cstyl16/sparse.tree/data/square_set/matrices
+# ./generate_paths.sh /work/d403/d403/cstyl16/sparse.tree/experiments/utils/test_lists/matrices-cirrus-square_set-serial-1000.txt /work/d403/d403/cstyl16/sparse.tree/data/square_set/matrices
